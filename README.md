@@ -35,6 +35,87 @@ payroll to be verifiable to an auditor without being public to everyone.
 
 ---
 
+## Architecture
+
+Plaintext terms exist in exactly two places: the employer's browser, and inside
+the enclave. Everything else — the chain, the explorer, this app's own landing
+page — sees a 32-byte commitment.
+
+```mermaid
+flowchart TB
+    subgraph EB["Employer browser"]
+        terms["stream terms<br/>rate · total · duration"]
+        seal["ECIES seal<br/>to enclave public key"]
+        terms --> seal
+    end
+
+    subgraph CHAIN["Flare Coston2 — public"]
+        vault["StreamVault<br/>commitment · funded · withdrawn"]
+        ev["StreamCreated event<br/>sealed ciphertext"]
+    end
+
+    subgraph TEE["Flare Confidential Compute — confidential"]
+        enc["FCE extension<br/>decrypt · check commitment<br/>accrue · sign"]
+    end
+
+    subgraph RB["Recipient browser"]
+        chal["sign challenge"]
+        wd["withdraw"]
+    end
+
+    aud["Auditor · no wallet<br/>/verify"]
+
+    seal -->|"commitment + ciphertext"| vault
+    vault -.->|emits| ev
+    ev -->|"ciphertext is public,<br/>the key is not"| chal
+    chal -->|"challenge signature"| enc
+    enc -->|"terms + signed<br/>authorization"| wd
+    wd -->|"ecrecover(teeSigner)"| vault
+    vault -->|"commitment"| aud
+    vault -.->|"revealTerms, if the<br/>employer chooses"| aud
+```
+
+The enclave holds the only key that opens the terms, and its signature is the
+only thing the vault accepts. **Remove the enclave and no withdrawal is
+possible** — confidential compute is the execution path, not a feature layered on
+top.
+
+### Why the enclave needs no state, no chain access, and no indexer
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant R as Recipient
+    participant E as FCC enclave
+    participant V as StreamVault
+
+    R->>E: sign(challenge) + sealed terms + commitment
+    Note over E: decrypt terms<br/>keccak256(terms) == commitment?<br/>is caller a party named inside?
+    E->>E: accrued = rate × elapsed (fixed-point)
+    E-->>R: terms + sig over (tag, chainId, vault,<br/>streamId, commitment, accrued, deadline)
+    R->>V: withdraw(streamId, accrued, deadline, sig)
+    Note over V: ecrecover == teeSigner?<br/>commitment matches stored?
+    V-->>R: pay (accrued − withdrawn), capped by funded
+```
+
+Three properties fall out of that digest:
+
+**The commitment is inside the signature.** A forged terms/commitment pair
+produces a signature the vault rejects, so the enclave never needs to read chain
+state to know it is being told the truth. No RPC, no indexer, no durable state —
+TEE restarts are therefore harmless, and the withdrawal path does not touch the
+parts of FCC that are still stabilising.
+
+**Accounting is cumulative.** The enclave signs total-accrued-since-start; the
+vault pays the delta against what was already withdrawn. Replaying an old
+authorization is a no-op rather than a double-spend, so no nonce is required.
+
+**Callers are authenticated.** The commitment and ciphertext are both public, so
+without the challenge signature anyone could poll the enclave, diff
+`cumulativeAccrued` between two calls, and derive the salary.
+
+---
+
 ## See it working — no wallet required
 
 | | |
@@ -44,7 +125,7 @@ payroll to be verifiable to an auditor without being public to everyone.
 | Audit record | `/verify/3` — verifies revealed terms against the on-chain commitment |
 | Catch a lie | [the same page rejecting altered terms](#verify-that-the-verification-actually-works) |
 
-`/` and `/verify/[id]` are deliberately wallet-free and RPC-only, so they work
+`/` and `/verify` are deliberately wallet-free and RPC-only, so they work
 for someone arriving cold with no extension installed.
 
 ### Verify that the verification actually works
@@ -68,29 +149,16 @@ though it were legitimate.
 
 ## How it uses Flare
 
-**Flare Confidential Compute is the execution path.** The enclave holds the only
-key that opens the stream terms, and its signature is the only thing that
-authorises a withdrawal.
+**Flare Confidential Compute is the execution path**, not a privacy feature added
+to a payments app. The enclave holds the only key that opens the stream terms,
+and its signature is the only thing the vault will accept. The three properties
+that follow from that — stateless enclave, cumulative accounting, authenticated
+callers — are described under [Architecture](#architecture) above.
 
-**The enclave is stateless.** The signed digest binds the commitment itself, so a
-forged terms/commitment pair yields a signature the vault rejects. The enclave
-performs no chain reads, keeps no durable state and needs no indexer — TEE
-restarts are therefore harmless, and the withdrawal path doesn't depend on the
-parts of FCC that are still stabilising.
-
-**Accounting is cumulative.** The enclave signs total-accrued-since-start; the
-vault pays the delta against what was already withdrawn. Replaying an old
-authorization is a no-op rather than a double-spend, so no nonce is needed.
-
-**Callers are authenticated.** The commitment and the ciphertext are both public
-— they're emitted in `StreamCreated`. Without authentication anyone could poll
-the enclave, diff `cumulativeAccrued` across two calls and derive the salary. So
-the caller signs a timestamped challenge and the enclave answers only an address
-named inside the decrypted terms.
-
-FXRP and USDT0 are the streamed assets — both 6-decimal tokens on Coston2, which
-is why rates are held as 1e12 fixed-point: 10 FXRP/day is 115.7407… raw units per
-second, and a plain integer rate underpays by 0.64%.
+FXRP and USDT0 are the streamed assets, both 6-decimal tokens on Coston2. That
+decimal count is why rates are held as 1e12 fixed-point: 10 FXRP/day is 115.7407…
+raw units per second, and a plain integer rate would silently underpay by 0.64% —
+which on a payroll product is the kind of bug that gets found in the demo.
 
 ---
 
@@ -151,7 +219,7 @@ three language implementations, registration tooling. Its README is preserved at
 | Contract | `contracts/StreamVault.sol` — commitment storage, cumulative replay-safe accounting, TEE-authorised withdraw/settle, Audit Mode |
 | Enclave | `typescript/src/app/streamHandlers.ts` — decrypt, verify, accrue, sign; caller authentication |
 | Protocol | `typescript/src/shared/protocol.ts` — one definition of terms encoding, digests and rate maths, imported by both enclave and browser |
-| Frontend | `frontend/` — landing, `/verify/[id]`, employer `/app` |
+| Frontend | `frontend/` — landing, `/verify`, employer `/app` |
 | Tests | 17 Foundry + 66 TypeScript, including cross-language digest parity |
 | Tooling | live-Coston2 e2e, golden-vector generator, browser-ciphertext verifier |
 
