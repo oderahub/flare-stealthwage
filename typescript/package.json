@@ -8,13 +8,20 @@
     "build": "tsc",
     "start": "node dist/main.js",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "golden": "tsx scripts/gen-golden-vectors.ts",
+    "tee-keys": "tsx scripts/gen-tee-keys.ts",
+    "e2e": "tsx scripts/e2e-coston2.ts",
+    "verify-ct": "tsx scripts/verify-browser-ciphertext.ts",
+    "demo-stream": "tsx scripts/create-demo-stream.ts"
   },
   "dependencies": {
+    "eciesjs": "^0.5.0",
     "viem": "2.21.55"
   },
   "devDependencies": {
     "@types/node": "22.10.2",
+    "tsx": "^4.23.1",
     "typescript": "5.7.2",
     "vitest": "2.1.8"
   }

@@ -20,6 +20,7 @@ import {
   OP_COMMAND_SAY_HELLO,
   OP_TYPE_GREETING,
 } from "./config.js";
+import { registerStreamHandlers, reportStreamState } from "./streamHandlers.js";
 
 // --- Extension state ---------------------------------------------------------
 // Serialized by the framework; no locking needed here.
@@ -40,6 +41,7 @@ export function resetState(): void {
 export function register(framework: Framework): void {
   framework.handle(OP_TYPE_GREETING, OP_COMMAND_SAY_HELLO, handleSayHello);
   framework.handle(OP_TYPE_GREETING, OP_COMMAND_SAY_GOODBYE, handleSayGoodbye);
+  registerStreamHandlers(framework);
 }
 
 /** Snapshot returned by GET /state. Mirrors the Go State struct. */
@@ -49,6 +51,7 @@ export function reportState(): unknown {
     lastGreeting,
     farewellCount,
     lastFarewell,
+    ...(reportStreamState() as Record<string, unknown>),
   };
 }
 

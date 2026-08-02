@@ -46,6 +46,7 @@ tools/pkg/contracts/*/*.bin
 # anchor for `npm ci` in typescript/Dockerfile.
 typescript/node_modules/
 typescript/dist/
+.vite/
 python/__pycache__/
 python/**/__pycache__/
 python/.venv/
@@ -61,3 +62,12 @@ DEPLOYMENT.md
 
 config/**/*.log
 config/register-tee.state
+# Local working files — not part of the public submission.
+.claude/
+STEALTHWAGE_PLAN.md
+REPRODUCIBILITY.md
+
+# Foundry deps — installed via `forge install`, never committed as a bare
+# gitlink (no .gitmodules here, so a commit would clone as an empty dir and
+# break `forge test`).
+lib/

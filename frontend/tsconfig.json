@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    // ES2020+ required: amounts, rates and stream ids are bigint, and BigInt
+    // literals (123n) are a type error below ES2020. create-next-app defaults
+    // to ES2017 — do not let a scaffold regeneration put it back.
+    "target": "ES2020",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"],
+      // Single source of truth for terms encoding, digests and rate maths,
+      // shared with the FCC extension. It lives under the extension's src/
+      // because that project compiles with rootDir="src" for the TEE image and
+      // cannot import from outside it — so the frontend reaches in instead.
+      "@protocol": ["../typescript/src/shared/protocol.ts"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
+  ],
+  "exclude": ["node_modules"]
+}

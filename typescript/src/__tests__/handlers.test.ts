@@ -128,6 +128,7 @@ describe("reportState", () => {
       lastGreeting: "",
       farewellCount: 0,
       lastFarewell: "",
+      authCount: 0,
     });
   });
 
@@ -139,6 +140,7 @@ describe("reportState", () => {
       lastGreeting: "Hello, A! Welcome to Flare Confidential Compute.",
       farewellCount: 1,
       lastFarewell: "Goodbye, B! Reason: r",
+      authCount: 0,
     });
   });
 });

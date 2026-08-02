@@ -1,0 +1,32 @@
+# Vercel's project root is the REPO ROOT, not frontend/ — the frontend imports
+# the shared protocol module from typescript/src/shared/, so that directory must
+# be uploaded. Everything below is irrelevant to the web build.
+
+contracts/
+test/
+lib/
+out/
+cache/
+broadcast/
+go/
+python/
+proxy/
+docker/
+tools/
+testdata/
+testing/
+scripts/
+config/
+results/
+docs/
+*.md
+docker-compose*.yaml
+foundry.toml
+
+# Never ship env files. Every value the frontend needs is public and has a
+# default in lib/chain.ts, so the deploy works with zero dashboard config;
+# NEXT_PUBLIC_* vars set in Vercel override those defaults.
+.env
+.env.*
+typescript/dist/
+**/node_modules/
