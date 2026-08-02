@@ -71,3 +71,4 @@ REPRODUCIBILITY.md
 # gitlink (no .gitmodules here, so a commit would clone as an empty dir and
 # break `forge test`).
 lib/
+BUILD.md
