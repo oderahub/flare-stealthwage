@@ -118,6 +118,10 @@ export default function Landing() {
           the amount. Terms are sealed to a confidential compute enclave; only a
           commitment reaches the explorer.
         </p>
+        <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-ink-muted">
+          We call this <span className="text-ink">selective transparency</span>.
+          Confidentiality is the default; disclosure is a deliberate choice.
+        </p>
 
         <dl className="mt-7 flex flex-wrap gap-x-8 gap-y-3 font-mono text-xs">
           {[

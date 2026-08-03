@@ -11,10 +11,17 @@ streaming leg.
 
 ## The problem
 
-Every on-chain payroll product today publishes your salary. Sablier, Superfluid,
-LlamaPay — the rate is a public storage slot. Paying a contractor on-chain means
-publishing what they earn, permanently, to anyone who looks. That single fact is
-why crypto-native teams still run payroll through a bank.
+Ada is an independent smart contract auditor. She works with four protocols at
+once, and each streams her payment on-chain. Today any one of those clients can
+open a block explorer and estimate what the other three are paying her.
+
+That is not a blockchain problem. It is a business problem.
+
+Blockchain payment streaming solved **how** money moves. It never solved **what
+becomes public when it moves.** Sablier, Superfluid, LlamaPay — the rate is a
+public storage slot. Paying a contractor on-chain means publishing what they
+earn, permanently, to anyone who looks. That single fact is why crypto-native
+teams still run payroll through a bank.
 
 ## What StealthWage does
 
@@ -29,6 +36,12 @@ exactly what accrued.
 
 **Remove the enclave and nothing can be withdrawn.** Confidential compute is not
 bolted onto this product; it is the execution path.
+
+We call this **selective transparency**: the chain proves a valid payment
+happened, the recipient withdraws without the employer's cooperation, and
+auditors can verify disclosures when the parties choose to make them. Everyone
+else sees a commitment. Confidentiality is the default; transparency is a
+deliberate choice.
 
 **Target user:** crypto-native teams paying contractors and employees, who need
 payroll to be verifiable to an auditor without being public to everyone.
