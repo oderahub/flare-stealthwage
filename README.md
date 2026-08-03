@@ -37,11 +37,17 @@ exactly what accrued.
 **Remove the enclave and nothing can be withdrawn.** Confidential compute is not
 bolted onto this product; it is the execution path.
 
-We call this **selective transparency**: the chain proves a valid payment
-happened, the recipient withdraws without the employer's cooperation, and
-auditors can verify disclosures when the parties choose to make them. Everyone
-else sees a commitment. Confidentiality is the default; transparency is a
-deliberate choice.
+We call this **selective transparency**: the chain proves that an agreement is
+being honored without revealing the agreement itself. The recipient withdraws
+without the employer's cooperation, auditors can verify disclosures when the
+parties choose to make them, and everyone else sees a commitment.
+Confidentiality is the default; transparency is a deliberate choice.
+
+Payroll is the first application, not the boundary. The primitive underneath —
+an on-chain commitment, terms sealed to a trusted execution environment, and an
+authorization a contract can verify without ever learning what it authorized —
+applies to any recurring agreement: retainers, grants, contributor rewards,
+subscriptions, licensing.
 
 **Target user:** crypto-native teams paying contractors and employees, who need
 payroll to be verifiable to an auditor without being public to everyone.
