@@ -13,7 +13,8 @@
     "tee-keys": "tsx scripts/gen-tee-keys.ts",
     "e2e": "tsx scripts/e2e-coston2.ts",
     "verify-ct": "tsx scripts/verify-browser-ciphertext.ts",
-    "demo-stream": "tsx scripts/create-demo-stream.ts"
+    "demo-stream": "tsx scripts/create-demo-stream.ts",
+    "serve": "tsx scripts/serve-extension.ts"
   },
   "dependencies": {
     "eciesjs": "^0.5.0",
