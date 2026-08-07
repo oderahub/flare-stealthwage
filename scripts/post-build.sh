@@ -145,12 +145,19 @@ log "Simulated TEE: $SIMULATED_TEE"
 
 # --- Step 3: Register TEE on-chain ---
 step 3 "Register TEE machine"
+# -command rRap, not the default `rap`. The capital R requests a FRESH
+# attestation challenge; reusing a stale one leaves the machine stuck at
+# INITIALIZED with nothing in the output saying why.
+# docs/deployment-steps.md:192 warns about exactly this, but upstream's script
+# omits the flag — so following the script alone reproduces the bug the docs
+# tell you to avoid.
 go run ./cmd/register-tee \
     -a "$ADDRESSES_FILE" \
     -c "$CHAIN_URL" \
     -p "$EXT_PROXY_URL" \
     -h "${EXT_PROXY_HOST_URL:-$EXT_PROXY_URL}" \
     -ep "$NORMAL_PROXY_URL" \
+    -command rRap \
     -state "$PROJECT_DIR/config/register-tee.state" \
     || die "Register TEE failed"
 
