@@ -211,6 +211,19 @@ A real confidential payment, end to end:
 | `withdraw` — enclave-authorised | [`0x347bc318…`](https://coston2-explorer.flare.network/tx/0x347bc3183a47f1f8fbea30f3bc5257bd0181d0f40be308e4bead1ea97a9e4ccb) |
 | `revealTerms` — Audit Mode | [`0x9b5b53ae…`](https://coston2-explorer.flare.network/tx/0x9b5b53ae47ddc315de99cd088026524f349c31d28b9a048386a0a8ae6099af94) |
 
+And the settlement path, proven separately on stream #4 — the enclave signs a
+final accrual, the vault pays the recipient what they earned and refunds the
+employer the rest:
+
+| Step | Result |
+|---|---|
+| `cancelStream` — enclave-settled | [`0x574e2295…`](https://coston2-explorer.flare.network/tx/0x574e2295479fbd17c175d888fcf8a7a59b47858b08acd0f0b3ded528cef4699a) |
+| refunded to employer | `999938` raw (0.999938 FXRP) |
+| paid to recipient | `62` raw — exactly the enclave-signed accrual |
+
+Refund and payout reconstruct the funded 1 FXRP to the raw unit.
+Reproduce with `npm run serve` and `npm run test-settle` in `typescript/`.
+
 ---
 
 ## What existed before, and what was built here

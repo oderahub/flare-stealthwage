@@ -14,7 +14,8 @@
     "e2e": "tsx scripts/e2e-coston2.ts",
     "verify-ct": "tsx scripts/verify-browser-ciphertext.ts",
     "demo-stream": "tsx scripts/create-demo-stream.ts",
-    "serve": "tsx scripts/serve-extension.ts"
+    "serve": "tsx scripts/serve-extension.ts",
+    "test-settle": "tsx scripts/test-settle.ts"
   },
   "dependencies": {
     "eciesjs": "^0.5.0",
