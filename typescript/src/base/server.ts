@@ -196,6 +196,18 @@ export class Server {
     req: http.IncomingMessage,
     res: http.ServerResponse,
   ): Promise<void> {
+    // A browser calling this extension sends a CORS preflight first, because
+    // the request carries Content-Type: application/json. Left unanswered the
+    // real POST is never sent and the caller sees only "Failed to fetch".
+    //
+    // Opt-in via EXTENSION_ALLOW_ORIGIN. Unset means no CORS headers at all,
+    // which is correct for the in-container deployment where only the local
+    // tee-node talks to this server.
+    if (req.method === "OPTIONS") {
+      res.writeHead(204, corsHeaders());
+      return res.end();
+    }
+
     let body = "";
     try {
       body = await readBody(req);
@@ -221,12 +233,32 @@ function readBody(req: http.IncomingMessage): Promise<string> {
   });
 }
 
+/**
+ * CORS headers, emitted only when EXTENSION_ALLOW_ORIGIN is set.
+ *
+ * Needed when a browser is the caller — the StealthWage recipient dashboard
+ * posts here directly rather than routing through on-chain instructions. Set it
+ * to the exact site origin in anything resembling production; "*" is fine for
+ * local development, where the endpoint is 127.0.0.1 and unreachable anyway.
+ */
+function corsHeaders(): Record<string, string> {
+  const origin = process.env.EXTENSION_ALLOW_ORIGIN;
+  if (!origin) return {};
+  return {
+    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Max-Age": "86400",
+  };
+}
+
 function send(res: http.ServerResponse, status: number, payload: unknown): void {
   const isText = typeof payload === "string";
   const body = isText ? (payload as string) : JSON.stringify(payload);
   res.writeHead(status, {
     "Content-Type": isText ? "text/plain" : "application/json",
     "Content-Length": Buffer.byteLength(body),
+    ...corsHeaders(),
   });
   res.end(body);
 }
