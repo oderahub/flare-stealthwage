@@ -2,23 +2,23 @@
 # the shared protocol module from typescript/src/shared/, so that directory must
 # be uploaded. Everything below is irrelevant to the web build.
 
-contracts/
-test/
-lib/
-out/
-cache/
-broadcast/
-go/
-python/
-proxy/
-docker/
-tools/
-testdata/
-testing/
-scripts/
-config/
-results/
-docs/
+/contracts/
+/test/
+/lib/
+/out/
+/cache/
+/broadcast/
+/go/
+/python/
+/proxy/
+/docker/
+/tools/
+/testdata/
+/testing/
+/scripts/
+/config/
+/results/
+/docs/
 *.md
 docker-compose*.yaml
 foundry.toml

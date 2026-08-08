@@ -70,6 +70,10 @@ REPRODUCIBILITY.md
 # Foundry deps — installed via `forge install`, never committed as a bare
 # gitlink (no .gitmodules here, so a commit would clone as an empty dir and
 # break `forge test`).
-lib/
+#
+# LEADING SLASH IS LOAD-BEARING: a bare `lib/` matches at ANY depth and silently
+# excluded frontend/lib/{chain,enclave,wagmi}.ts, so the app could not build
+# from a fresh clone.
+/lib/
 BUILD.md
 .vercel
