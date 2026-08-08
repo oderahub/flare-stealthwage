@@ -43,7 +43,7 @@ import {
   VAULT_ABI,
   VAULT_ADDRESS,
   short,
-} from "@/lib/chain";
+} from "../../lib/chain";
 
 const TEE_ECIES_PUBKEY =
   process.env.NEXT_PUBLIC_TEE_ECIES_PUBKEY ??

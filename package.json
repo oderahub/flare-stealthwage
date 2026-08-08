@@ -1,0 +1,11 @@
+{
+  "name": "stealthwage",
+  "private": true,
+  "description": "Marker manifest so Vercel detects Next.js with the project root at the repo root. The app lives in frontend/; typescript/ holds the FCC extension and the shared protocol module the frontend imports. Root Directory must NOT be set to frontend/ or that shared module is not uploaded. Build is driven by vercel.json.",
+  "dependencies": {
+    "next": "16.2.12"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  }
+}

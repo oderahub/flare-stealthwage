@@ -33,7 +33,7 @@ import {
   readTokenMeta,
   short,
   type OnChainStream,
-} from "@/lib/chain";
+} from "../lib/chain";
 
 const FAUCET = "https://faucet.flare.network/coston2";
 const WITHDRAW_TX =

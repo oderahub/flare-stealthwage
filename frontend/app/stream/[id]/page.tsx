@@ -42,8 +42,8 @@ import {
   readTokenMeta,
   short,
   type OnChainStream,
-} from "@/lib/chain";
-import { ENCLAVE_URL, requestAuthorization, type Authorization } from "@/lib/enclave";
+} from "../../../lib/chain";
+import { ENCLAVE_URL, requestAuthorization, type Authorization } from "../../../lib/enclave";
 
 export default function RecipientDashboard() {
   const params = useParams<{ id: string }>();

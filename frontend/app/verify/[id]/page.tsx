@@ -35,7 +35,7 @@ import {
   readTokenMeta,
   short,
   type OnChainStream,
-} from "@/lib/chain";
+} from "../../../lib/chain";
 
 type Verdict = "match" | "mismatch" | "absent";
 
