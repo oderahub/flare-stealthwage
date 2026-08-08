@@ -139,7 +139,7 @@ without the challenge signature anyone could poll the enclave, diff
 
 | | |
 |---|---|
-| Live app | _deploying — URL to follow_ |
+| Live app | **https://stealthwage.vercel.app** |
 | Landing | `/` — live split panel: what the chain sees vs what the recipient sees |
 | Audit record | `/verify/3` — verifies revealed terms against the on-chain commitment |
 | Catch a lie | [the same page rejecting altered terms](#verify-that-the-verification-actually-works) |
