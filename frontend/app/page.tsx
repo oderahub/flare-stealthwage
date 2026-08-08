@@ -245,6 +245,43 @@ export default function Landing() {
         </p>
       </section>
 
+      {/* ── Entry points ─────────────────────────────────────────────────── */}
+      <section className="mt-12 border-t border-rule pt-8">
+        <h2 className="label">Use it</h2>
+        <p className="mt-4 max-w-2xl text-[13px] leading-relaxed text-ink-muted">
+          Everything above is read-only and needs no wallet. The two screens
+          below do — they sign transactions on Coston2 (chain {CHAIN_ID}).
+        </p>
+        <div className="mt-5 flex flex-wrap gap-3">
+          <a
+            href="/app"
+            className="border border-rule px-4 py-2 font-mono text-[13px] text-ink hover:border-accent hover:text-accent"
+          >
+            Open a stream →
+            <span className="ml-2 text-ink-subtle">employer</span>
+          </a>
+          <a
+            href={`/stream/${DEMO_STREAM_ID}`}
+            className="border border-rule px-4 py-2 font-mono text-[13px] text-ink hover:border-accent hover:text-accent"
+          >
+            Withdraw →
+            <span className="ml-2 text-ink-subtle">recipient</span>
+          </a>
+          <a
+            href={`/verify/${DEMO_STREAM_ID}`}
+            className="border border-rule px-4 py-2 font-mono text-[13px] text-ink hover:border-accent hover:text-accent"
+          >
+            Audit this stream →
+            <span className="ml-2 text-ink-subtle">no wallet</span>
+          </a>
+        </div>
+        <p className="mt-4 max-w-2xl text-[13px] leading-relaxed text-ink-muted">
+          Withdrawing also needs the confidential compute extension to be
+          reachable. If it is offline the recipient screen says so plainly, and
+          nothing else on this site is affected.
+        </p>
+      </section>
+
       {/* ── References ───────────────────────────────────────────────────── */}
       <section className="mt-12 border-t border-rule-2 pt-6">
         <h2 className="label">References</h2>
